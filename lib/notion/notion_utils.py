@@ -79,6 +79,19 @@ class NotionClient:
 
         return result
 
+    def update_page_properties(self, page_id: str, properties: dict) -> dict:
+        """페이지 속성 업데이트 (제목, 상태, select 등)
+
+        예시:
+            # 상태 변경
+            client.update_page_properties(page_id, {"상태": {"status": {"name": "진행 중"}}})
+            # 제목 변경
+            client.update_page_properties(page_id, {"이름": {"title": [{"type": "text", "text": {"content": "새 제목"}}]}})
+            # select 변경
+            client.update_page_properties(page_id, {"우선순위": {"select": {"name": "높음"}}})
+        """
+        return self._request("PATCH", f"/pages/{page_id}", {"properties": properties})
+
     def archive_page(self, page_id: str) -> dict:
         """페이지 삭제 (아카이브)"""
         return self._request("PATCH", f"/pages/{page_id}", {"archived": True})
