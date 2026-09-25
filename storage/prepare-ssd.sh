@@ -63,5 +63,8 @@ mkdir -p "$mount_dir/worktrees" "$mount_dir/projects" "$mount_dir/cache/npm" "$m
 chown -R "$owner:$(id -gn "$owner")" "$mount_dir/worktrees" "$mount_dir/projects" "$mount_dir/cache" "$mount_dir/builds"
 printf '%s\n' "$uuid" > "$mount_dir/.storage-ready"
 sync
+if [ -d /run/systemd/system ]; then
+  systemctl daemon-reload
+fi
 findmnt "$mount_dir"
 printf 'SSD prepared. Previous fstab saved at %s\n' "$backup"

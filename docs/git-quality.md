@@ -37,9 +37,12 @@ Vault 연결 미설정. Git 원본은 이 저장소이며 Obsidian 프로젝트 
 ## SSD/HDD
 
 현장 관측: OS와 현재 저장소는 HDD의 100GiB LVM/ext4 볼륨에 있으며 여유 약 76GiB.
-Samsung SSD 980 500GB는 NTFS 파티션 상태로 미마운트다. 사용자는 기존 SSD 데이터가 필요 없다고 답했다.
+초기 조사에서 Samsung SSD 980 500GB는 NTFS/미마운트 상태였고, 사용자는 기존 데이터가 필요 없다고 답했다.
+이후 사용자가 준비 스크립트를 실행했다. 현재 SSD는 `/mnt/dev-ssd`에 ext4로 마운트되어 있다.
+[SSD 적용·검증 기록](storage-20260925.md)에 현재 상태와 남은 검증을 기록한다.
 
-- SSD: 활성 저장소/임시 worktree, npm/pip/build cache. Linux 개발용 ext4 파일시스템으로 준비한 뒤 사용한다.
+- SSD: 새 작업의 worktree는 `/mnt/dev-ssd/worktrees`, 개발 캐시는 `/mnt/dev-ssd/cache`를 사용한다.
+  작업 전 SSD 마운트를 확인한다. 기존 Git object DB와 실행 중 서비스의 이동은 별도로 검증한다.
 - HDD: Git bundle·운영 상태 백업, 완료 산출물·보관 자료. 현재 LV에 충분한 여유가 있어 즉시 확장하지 않는다.
 - 장치 준비 전에는 HDD에 있는 원본을 이동하지 않는다. 일회성 소형 검사 도구와 redacted 보고서는
   RAM 기반 /tmp를 사용하며 영구 백업으로 간주하지 않는다.
