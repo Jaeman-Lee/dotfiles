@@ -2,6 +2,16 @@
 
 개인 개발 환경 설정 및 재사용 라이브러리 모음.
 
+## Codex 공통 작업 원칙
+
+[Git 기준 작업 지침](codex/AGENTS.md)은 2026-09-25 사용자 결정의 원본이다.
+Codex 전역 지침으로 설치하려면 `sh codex/install.sh`를 실행한다.
+브랜치 전환에도 유지되도록 `~/.codex/AGENTS.md`에 사본을 설치한다.
+기존 내용이 다르면 덮어쓰지 않고 중지한다. 계정 메모리와는 별개인 로컬 지속 설정이다.
+
+문서·프로젝트 기록은 Obsidian 호환 Markdown을 기준으로 하며, 문서 원본과 GitHub 이슈 상태는 중복 관리하지 않는다.
+[효율성 판단과 적용 기준](docs/decisions/2026-09-25-obsidian-records.md)에 근거와 Vault 미설정 시 처리 방법을 기록했다.
+
 ## 빠른 시작
 
 ```bash
