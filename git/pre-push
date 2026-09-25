@@ -1,0 +1,18 @@
+#!/bin/sh
+# Managed source: dotfiles/git/pre-push. Server-side protection remains primary.
+set -eu
+default=$(git config --get workflow.defaultBranch || true)
+if [ -z "$default" ]; then
+  default=$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD || true)
+  default=${default#origin/}
+fi
+if [ -z "$default" ]; then
+  printf '%s\n' 'Default branch unknown; configure workflow.defaultBranch before pushing.' >&2
+  exit 1
+fi
+while read -r local_ref local_sha remote_ref remote_sha; do
+  if [ "$remote_ref" = "refs/heads/$default" ]; then
+    printf 'Direct push/deletion of %s is blocked locally. Use a reviewed pull request.\n' "$default" >&2
+    exit 1
+  fi
+done
