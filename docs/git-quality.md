@@ -49,3 +49,26 @@ Samsung SSD 980 500GB는 NTFS 파티션 상태로 미마운트다. 사용자는 
 근거: [Git 설정](https://git-scm.com/docs/git-config),
 [Actions 보안](https://docs.github.com/en/actions/reference/security/secure-use),
 [비밀정보 처리](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository).
+
+## 여러 저장소의 현재 상태
+
+`python3 git/portfolio.py --root /path/to/repositories`는 브랜치·HEAD·기준 커밋,
+미커밋 개수·upstream 대비 ahead/behind·worktree 개수를 JSON으로 출력한다.
+원문이나 파일 내용은 읽지 않으며 fetch도 하지 않는다. 원격 비교는 마지막 fetch 기준이다.
+upstream이 없으면 ahead/behind를 0으로 오인하지 않도록 null로 표시한다.
+임시 worktree는 PR 병합/종료, 미커밋 없음, 필요한 커밋의 원격 보존을 확인한 뒤 정리한다.
+강제 worktree 삭제와 실행 중인 작업 폴더 정리는 자동화하지 않는다.
+
+## SSD 준비 실행
+
+관리자 인증이 필요한 현장 작업이다. 다음 명령은 확인된 SSD 전체를 초기화한다.
+장치 식별·운영체제·마운트 검사에 실패하면 중단하며 자동 재시도하지 않는다.
+
+```sh
+sudo sh storage/prepare-ssd.sh --erase-confirmed-ssd
+sh storage/use-ssd.sh
+```
+
+첫 명령 완료 후 `/mnt/dev-ssd/worktrees`를 새 작업의 위치로 사용한다.
+두 번째 명령은 새 로그인 세션의 npm/pip/uv 캐시 경로를 설정한다.
+기존 서비스·작업 트리·캐시는 실행 상태를 확인한 별도 이동 절차가 필요하다.
