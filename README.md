@@ -96,3 +96,8 @@ results = client.search("키워드")
 - Notion API Token: [notion.so/my-integrations](https://www.notion.so/my-integrations)
 
 **주의:** 실제 토큰이 담긴 `settings.json` 은 `.gitignore` 에 포함되어 있어 커밋되지 않습니다.
+
+## Ubuntu 원격 PC 유지
+
+GNOME 자동 잠금과 AC 전원 자동 절전을 끄고 원래 값으로 복원하는 방법은
+[원격 사용 설정](docs/ubuntu-remote-awake.md)을 참고하세요.
