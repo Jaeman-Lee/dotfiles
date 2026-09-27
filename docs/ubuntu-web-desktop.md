@@ -83,7 +83,8 @@ xdg-open "$HOME/.local/share/ubuntu-web-desktop/접속정보.txt"
 화면을 가로로 돌리고 확대/축소해서 사용한다. 짧은 Codex 지시와 작업 진행 확인에 적합하다.
 문장은 기기에서 먼저 완성하고 PC로 붙여넣는다. 작성 중에는 PC에 키 입력을 보내지 않는다.
 PC 클립보드는 작성한 문장으로 바뀐다. 문장은 연결 화면을 떠나면 지워지며 별도 파일이나 로그에 저장하지 않는다.
-붙여넣기 후에도 입력칸에 문장을 남기므로 PC 화면에서 결과를 확인하고 **지우기**를 누른다.
+**전송 ↵** 또는 상단 **Enter**로 보내면 입력칸을 자동으로 비운다. **붙여넣기만**은 글을 남긴다.
+전송 대기 중 새로 쓴 글과 연결 오류로 전송하지 못한 글은 지우지 않는다.
 **붙여넣기만**을 누른 뒤 상단 **Enter**를 누르면 같은 글을 다시 붙이지 않고 Enter만 보낸다.
 글을 수정하면 다음 전송에서 새 문장을 붙인다. **붙여넣기만**을 반복하면 중복 입력될 수 있다.
 
@@ -125,7 +126,7 @@ sg docker -c 'docker compose --env-file "$HOME/.local/share/ubuntu-web-desktop/c
 웹 연결은 잠시 끊기며 PC 프로그램은 유지된다. 기기 브라우저를 새로고침한다.
 확장은 터치 기기에서 글쓰기 입력칸을 기본 표시한다. 실제 키보드를 열려면 입력칸 또는 글쓰기 버튼을 누른다.
 붙여넣기는 클립보드 전송 후 500ms 뒤 단축키를 보낸다. 원격 앱이 붙여넣기를 완료했다는 확인은 없으므로
-문장을 자동 삭제하지 않고 PC 화면에서 확인하도록 안내한다. 일반 앱은 Ctrl+V, 기본 Codex·터미널 모드는 Ctrl+Shift+V다.
+완료 안내는 PC 화면에서 확인하도록 한다. 전송 요청의 Enter까지 보낸 뒤 해당 문장을 비우며, 이는 원격 앱의 수신 확인을 의미하지 않는다. 일반 앱은 Ctrl+V, 기본 Codex·터미널 모드는 Ctrl+Shift+V다.
 UI 확장은 1.6.0 내부 Angular 이벤트에 의존하므로 Guacamole 버전 변경 시 재검증한다.
 전송은 붙여넣기 단축키 후 300ms를 기다린 뒤 Enter를 보낸다. 전송 중 버튼 연타를 막으며,
 연결 변경·종료 또는 화면 이탈 시 대기 중인 Enter를 취소한다.
@@ -261,3 +262,11 @@ GNOME 원격 데스크톱의 5초 CPU 평균은 0.40%였다. CPU 100%는 논리 
 - [iPad 키보드 언어 전환](https://support.apple.com/guide/ipad/switch-between-keyboards-ipaddd28d7ed/ipados)
 - [Guacamole 1.6.0 한글 조합 이벤트 처리](https://github.com/apache/guacamole-client/blob/1.6.0/guacamole/src/main/frontend/src/app/textInput/directives/guacTextInput.js)
 - [Tailscale Serve](https://tailscale.com/docs/features/tailscale-serve)
+
+## 스마트폰 실사용 확인 및 입력칸 자동 비우기
+
+2026-09-27 사용자가 휴대폰에서 직접 메시지를 보냈고 전송이 잘 된다고 확인했다.
+앞선 스마트폰 동일 오류 미해결 기록은 이 실사용 성공 확인으로 갱신한다.
+추가 요청에 따라 전송 후 흰 입력칸을 자동으로 비운다. 붙여넣기만은 유지하며, 전송 지연 중 새 입력은
+문자열과 편집 세대가 모두 같을 때만 지우도록 보호한다. 연결 오류로 Enter를 보내지 못하면 입력을 보존한다.
+자동 회귀 검증 9개에서 기존 전송 동작과 자동 비우기·새 글 보호·연결 오류 보존을 확인했다.

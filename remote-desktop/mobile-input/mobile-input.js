@@ -41,7 +41,12 @@ angular.module('client').directive('ubuntuMobileInput', ['$window', '$timeout', 
 
             var pendingPaste, pendingEnter;
             var lastPaste = null;
-            scope.draftEdited = function () { lastPaste = null; scope.notice = ''; };
+            var draftRevision = 0;
+            scope.draftEdited = function () {
+                draftRevision++;
+                lastPaste = null;
+                scope.notice = '';
+            };
             scope.pasteDraft = function (submit) {
                 var managed = scope.focusedClient;
                 if (scope.sending || (!scope.draft && !submit)) return;
@@ -53,6 +58,7 @@ angular.module('client').directive('ubuntuMobileInput', ['$window', '$timeout', 
                 var client = managed.client;
                 var terminal = scope.terminal;
                 var text = scope.draft;
+                var revision = draftRevision;
                 function stillConnected() {
                     return scope.focusedClient === managed && managed.clientState.connectionState === 'CONNECTED';
                 }
@@ -64,6 +70,12 @@ angular.module('client').directive('ubuntuMobileInput', ['$window', '$timeout', 
                     }
                     client.sendKeyEvent(1, 0xFF0D);
                     client.sendKeyEvent(0, 0xFF0D);
+                    // Clear only the draft submitted by this operation. The user
+                    // may have already started another message during the delay.
+                    if (scope.draft === text && draftRevision === revision) {
+                        scope.draft = '';
+                        scope.draftEdited();
+                    }
                     scope.notice = '전송을 요청했습니다. PC 화면에서 확인하세요.';
                 }
                 // Enter after a manual paste must not insert the same draft twice.
@@ -86,8 +98,8 @@ angular.module('client').directive('ubuntuMobileInput', ['$window', '$timeout', 
                 writer.sendText(text);
                 writer.sendEnd();
                 // GNOME receives the clipboard asynchronously after the RDP
-                // stream closes. Retain the draft: sending a shortcut does not
-                // acknowledge insertion into the user's chosen application.
+                // stream closes. Paste-only retains its draft; submit clears it
+                // after dispatching Enter, without claiming a remote app ack.
                 pendingPaste = $timeout(function () {
                     if (!stillConnected()) {
                         scope.sending = false;

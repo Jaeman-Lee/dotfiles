@@ -46,14 +46,16 @@ test('Enter with a draft pastes before sending Enter, blocking double taps', () 
     h.step();
     assert.deepEqual(h.calls.slice(-2), enter);
     assert.equal(h.scope.sending, false);
-    assert.equal(h.scope.draft, '한글 hello');
+    assert.equal(h.scope.draft, '');
 });
 test('manual paste then Enter does not paste the draft twice', () => {
     const h = harness(); h.scope.draft = 'one';
-    h.scope.pasteDraft(false); h.step(); h.scope.sendEnter();
+    h.scope.pasteDraft(false); h.step();
+    assert.equal(h.scope.draft, 'one');
+    h.scope.sendEnter();
     assert.equal(h.calls.filter(c => c[0] === 'clipboard').length, 1);
     assert.deepEqual(h.calls.slice(-2), enter);
-    h.scope.draftEdited(); h.scope.sendEnter();
+    h.scope.draft = 'one'; h.scope.draftEdited(); h.scope.sendEnter();
     assert.equal(h.calls.filter(c => c[0] === 'clipboard').length, 2);
 });
 test('default send uses terminal paste without requiring a checkbox', () => {
@@ -84,6 +86,17 @@ test('disconnect between paste and Enter cancels execution', () => {
     h.scope.sendEnter(); h.step();
     h.scope.focusedClient.clientState.connectionState = 'DISCONNECTED'; h.step();
     assert.equal(h.calls.some(c => c[2] === 0xff0d), false);
+    assert.equal(h.scope.draft, 'do not execute');
+});
+test('submit preserves a new draft written during the paste delay', () => {
+    const h = harness(); h.scope.draft = 'first'; h.scope.sendEnter();
+    h.scope.draft = 'next'; h.scope.draftEdited(); h.step(); h.step();
+    assert.equal(h.scope.draft, 'next');
+});
+test('submit preserves a newly edited draft even if its text is identical', () => {
+    const h = harness(); h.scope.draft = 'repeat'; h.scope.sendEnter();
+    h.scope.draftEdited(); h.step(); h.step();
+    assert.equal(h.scope.draft, 'repeat');
 });
 test('leaving the view cancels pending Enter', () => {
     const h = harness(); h.scope.draft = 'do not execute';
