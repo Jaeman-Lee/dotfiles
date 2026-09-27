@@ -7,7 +7,9 @@ angular.module('client').directive('ubuntuMobileInput', ['$window', '$timeout', 
             // Include iPad with an attached keyboard/desktop browser identity.
             scope.writing = $window.navigator.maxTouchPoints > 0;
             scope.draft = '';
-            scope.terminal = false;
+            // This desktop is primarily used for Codex in Ptyxis. Plain Ctrl+V
+            // reaches Codex as an image-paste command, not terminal text paste.
+            scope.terminal = true;
             if (scope.writing) scope.menu.inputMethod = 'none';
 
             var draft = element[0].querySelector('#ubuntu-writing-text');
@@ -94,8 +96,12 @@ angular.module('client').directive('ubuntuMobileInput', ['$window', '$timeout', 
                     }
                     client.sendKeyEvent(1, 0xFFE3);
                     if (terminal) client.sendKeyEvent(1, 0xFFE1);
-                    client.sendKeyEvent(1, 0x76);
-                    client.sendKeyEvent(0, 0x76);
+                    // Guacamole's RDP keymap derives modifiers from the keysym.
+                    // Lowercase v releases Shift even if we explicitly held it,
+                    // delivering Ctrl+V (Codex image paste) to the terminal app.
+                    var pasteKey = terminal ? 0x56 : 0x76;
+                    client.sendKeyEvent(1, pasteKey);
+                    client.sendKeyEvent(0, pasteKey);
                     if (terminal) client.sendKeyEvent(0, 0xFFE1);
                     client.sendKeyEvent(0, 0xFFE3);
                     lastPaste = { text: text, managed: managed, terminal: terminal };

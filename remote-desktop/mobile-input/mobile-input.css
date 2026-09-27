@@ -26,6 +26,10 @@ ubuntu-mobile-input label { display: block; margin-top: 6px; font-size: 12px; }
 .ubuntu-writing-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 .ubuntu-writing-actions label { margin: 0; }
 .ubuntu-writing-actions input { width: 20px; height: 20px; vertical-align: middle; }
+.ubuntu-input-destination select {
+    font-size: 16px; min-height: 44px; margin-left: 8px;
+    color: #111; background: #fff; border-radius: 6px;
+}
 .ubuntu-writing-actions button:disabled { opacity: 0.5; }
 .ubuntu-input-notice { font-size: 12px; margin-top: 6px; }
 .client-bottom .text-input { flex-wrap: wrap; padding-bottom: env(safe-area-inset-bottom, 0px); }

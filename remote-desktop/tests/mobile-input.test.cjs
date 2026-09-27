@@ -56,12 +56,20 @@ test('manual paste then Enter does not paste the draft twice', () => {
     h.scope.draftEdited(); h.scope.sendEnter();
     assert.equal(h.calls.filter(c => c[0] === 'clipboard').length, 2);
 });
-test('terminal send releases Ctrl and Shift before Enter', () => {
-    const h = harness(); h.scope.draft = '안녕'; h.scope.terminal = true;
+test('default send uses terminal paste without requiring a checkbox', () => {
+    const h = harness(); h.scope.draft = '안녕';
+    assert.equal(h.scope.terminal, true);
     h.scope.sendEnter(); h.step(); h.step();
     assert.deepEqual(h.calls.slice(2), [
-        ['key',1,0xffe3], ['key',1,0xffe1], ['key',1,118], ['key',0,118],
+        ['key',1,0xffe3], ['key',1,0xffe1], ['key',1,86], ['key',0,86],
         ['key',0,0xffe1], ['key',0,0xffe3], ...enter
+    ]);
+});
+test('general app paste is available only after explicit selection', () => {
+    const h = harness(); h.scope.draft = '안녕'; h.scope.terminal = false;
+    h.scope.pasteDraft(false); h.step();
+    assert.deepEqual(h.calls.slice(2), [
+        ['key',1,0xffe3], ['key',1,118], ['key',0,118], ['key',0,0xffe3]
     ]);
 });
 test('empty draft and collapsed writing send only Enter', () => {
