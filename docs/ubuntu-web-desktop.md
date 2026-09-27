@@ -173,7 +173,15 @@ Git 원본과 `~/.codex/AGENTS.md`에 설치한 내용의 일치를 확인했으
 자동화 브라우저는 Ubuntu의 사용자 네임스페이스 제한 때문에 검증용 세션에 한해서
 `--no-sandbox`로 실행했다. PC의 Firefox나 시스템 보안 설정을 변경한 것은 아니다.
 
-## 근거
+## 사용자 연결 확인과 대기 자원 측정 — 2026-09-27
+
+사용자가 정상 연결을 확인했다. 이후 측정 시에는 활성 RDP 연결이 없었으므로 아래 값은 대기 상태다.
+Guacamole 웹 컨테이너 메모리 약 142 MiB, guacd 약 8 MiB, GNOME 원격 데스크톱 RSS 약 181 MiB로
+합계 약 331 MiB였다(서로 다른 메모리 집계 방식의 근사 합계). 웹 CPU 0.12%, guacd 0%,
+GNOME 원격 데스크톱의 5초 CPU 평균은 0.40%였다. CPU 100%는 논리 CPU 한 개 기준이며 PC에는 12개가 있다.
+시스템 가용 메모리는 약 6.9 GiB였다. 접속 중 스크롤·영상 등 화면 변화가 많은 작업의 최대 부하는 측정하지 않았다.
+
+## 참고 자료
 
 - [Ubuntu 데스크톱 공유](https://ubuntu.com/desktop/docs/en/24.04/how-to/share-your-desktop-remotely/)
 - [Guacamole 공식 Docker 설치](https://guacamole.apache.org/doc/gug/guacamole-docker.html)
