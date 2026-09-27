@@ -12,6 +12,13 @@ Codex 전역 지침으로 설치하려면 `sh codex/install.sh`를 실행한다.
 문서·프로젝트 기록은 Obsidian 호환 Markdown을 기준으로 하며, 문서 원본과 GitHub 이슈 상태는 중복 관리하지 않는다.
 [효율성 판단과 적용 기준](docs/decisions/2026-09-25-obsidian-records.md)에 근거와 Vault 미설정 시 처리 방법을 기록했다.
 
+## Ubuntu 웹 원격 화면
+
+[갤럭시·iPad에서 Tailscale로 Ubuntu 화면을 조작하는 설정과 사용법](docs/ubuntu-web-desktop.md).
+설치 코드는 [remote-desktop/](remote-desktop/)에 있으며, 비밀번호와 실행 상태는 저장소 밖에 보관한다.
+
+Codex의 [지속 작업 지침](codex/AGENTS.md)에 사용자 친화적인 설계 원칙을 포함한다.
+
 ## 빠른 시작
 
 ```bash
