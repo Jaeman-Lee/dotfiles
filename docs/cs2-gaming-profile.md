@@ -77,3 +77,17 @@ Steam의 CS2 시작 옵션은 `~/.local/bin/cs2-launch %command%`에 해당하�
 - 게임 파일의 `game/csgo/cfg/user_keys_default.vcfg`에서 표준 키 바인딩을 확인했다.
 
 실제 게임 다운로드 완료와 플레이 검증은 파일/서비스 설정 검증과 별개로 이슈에 기록한다.
+
+## 2026-09-27 적용 검증
+
+- 시스템 서비스와 해당 서비스 start/stop만 허용하는 사용자 한정 Polkit 규칙 설치.
+- `shellcheck -x gaming/*.sh`, Python 구문 검사, 자원 테스트 4개 통과.
+- 실제 서비스 활성화 시 kubepods `cpu.max=400000 100000`, `cpu.weight=50`,
+  `memory.high=8589934592` 확인. 정지 시 기존 `max 100000`, `430`, `max`로 복구.
+- 실제 게임 실행 래퍼로 테스트 프로세스를 실행해 performance 프로필과 자원 제한을 확인.
+  종료 후 balanced, GameMode inactive, 자원 서비스 inactive 및 기존 값 복구 확인.
+- `powerprofilesctl launch --profile performance --appid cs2 -- gamemoded -t` 전체 통과.
+  래퍼의 `--`는 게임의 `-h` 해상도 옵션이 전원 도구의 help 옵션으로 해석되지 않게 한다.
+- Steam 정상 종료 후 설정 반영, 재시작 후 CS2 시작 옵션과 비디오 설정 유지 확인.
+  적용된 GameMode/게임 설정/래퍼/시스템 도우미가 Git 원본과 일치함을 확인.
+- Steam 다운로드 재개 확인. CS2 실제 실행과 맵 내 FPS/프레임 시간 비교는 다운로드 완료 후 필요.

@@ -12,4 +12,4 @@ if [[ -f $config_source ]]; then
 fi
 # The desktop power profile hold is released even if the child crashes.
 exec powerprofilesctl launch --profile performance --reason 'Counter-Strike 2' \
-    --appid cs2 /usr/games/gamemoderun "$@" -w 1920 -h 1080 -fullscreen +exec workstation.cfg
+    --appid cs2 -- /usr/games/gamemoderun "$@" -w 1920 -h 1080 -fullscreen +exec workstation.cfg
