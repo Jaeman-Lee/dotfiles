@@ -103,6 +103,7 @@ def prepare():
         "갤럭시/iPad에서 Tailscale 연결 후 접속하세요.\n"
         "이 파일은 비밀번호가 포함되어 있으므로 Git/이슈/채팅에 붙여넣지 마세요.\n"
     ))
+    run("python3", str(HERE / "install-mobile-input.py"))
     compose("up", "-d")
     print(f"Web UI prepared at http://127.0.0.1:18080/; credentials: {STATE / '접속정보.txt'}")
 
