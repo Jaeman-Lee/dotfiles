@@ -10,6 +10,8 @@ Vault 연결 미설정. 이 Markdown이 문서 원본이다.
 실제 할 일은 [이슈 #13](https://github.com/Jaeman-Lee/dotfiles/issues/13),
 설치 작업은 [이슈 #11](https://github.com/Jaeman-Lee/dotfiles/issues/11),
 변경 검토는 [PR #12](https://github.com/Jaeman-Lee/dotfiles/pull/12)에서 관리한다.
+구현은 [79a9400](https://github.com/Jaeman-Lee/dotfiles/commit/79a9400),
+적용 검증과 인자 전달 수정은 [439a409](https://github.com/Jaeman-Lee/dotfiles/commit/439a409)에 기록했다.
 
 ## 적용 기준
 
