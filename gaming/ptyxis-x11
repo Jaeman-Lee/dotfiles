@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Use a separate application identity so existing Wayland terminals stay untouched.
+exec env GDK_BACKEND=x11 /usr/bin/ptyxis --gapplication-app-id=org.gnome.Ptyxis.X11 "$@"

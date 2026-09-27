@@ -1,0 +1,11 @@
+{
+  "setting.defaultres": "1920",
+  "setting.defaultresheight": "1080",
+  "setting.refreshrate_numerator": "120",
+  "setting.refreshrate_denominator": "1",
+  "setting.fullscreen": "1",
+  "setting.nowindowborder": "0",
+  "setting.mat_vsync": "0",
+  "setting.msaa_samples": "0",
+  "setting.r_csgo_cmaa_enable": "1"
+}
