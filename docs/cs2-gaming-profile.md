@@ -24,7 +24,7 @@ Vault 연결 미설정. 이 Markdown이 문서 원본이다.
 | 성능 | [실행 래퍼](../gaming/cs2-launch.sh), [GameMode](../gaming/gamemode.ini) | 게임 프로세스가 있는 동안 전원 프로필 performance를 유지하고 GameMode를 활성화한다. |
 | 계측 | [게임 설정](../gaming/workstation.cfg) | FPS/프레임 시간·핑·네트워크 손실 표시를 켠다. |
 | 서버 공존 | [자원 서비스](../gaming/cs2-resources.service), [제어 코드](../gaming/cs2-resources.py) | 게임 중 kubepods 총 CPU 4개 상당 상한, CPUWeight 50, 메모리 soft threshold 8GiB; k3s 관리 프로세스는 CPUWeight 50. 종료 시 이전 값으로 복원한다. |
-| 그래픽·입력 | [비디오 설정](../gaming/video-baseline.json), [게임 설정](../gaming/workstation.cfg) | FHD 전체 화면, VSync 끔, CMAA2, MSAA 끔, 게임 240FPS·메뉴 60FPS 상한, 감도 1.0, 고정 초록 조준점, 표준 이동/전투 키. |
+| 그래픽·입력 | [비디오 설정](../gaming/video-baseline.json), [게임 설정](../gaming/workstation.cfg) | FHD 전체 화면, VSync 끔, CMAA2, MSAA 끔, 게임 240FPS·메뉴 60FPS 상한, 게임 메뉴의 감도 보존, 고정 초록 조준점, 표준 이동/전투 키. |
 | 백업 | [적용 스크립트](../gaming/apply-cs2-profile.py) | 변경 전 사본은 개인 로컬 상태 폴더에 보존하고, 재현 가능한 선택 설정만 Git으로 관리한다. |
 
 CPU 4개는 전체 12개 논리 CPU 중 4개 상당의 시간 할당량이다. 코어를 고정하지 않는다.
@@ -99,3 +99,8 @@ Steam의 CS2 시작 옵션은 `~/.local/bin/cs2-launch %command%`에 해당하�
 - Steam 다운로드 재개 후, 사용자가 CS2 정상 구동을 확인했다.
   설치·실행 목표는 완료했으며, 게임 내 개별 설정 반영 화면과 맵 내 FPS/프레임 시간
   비교는 별도로 측정하지 않았다. 240FPS 상한은 성능 측정 결과가 아니다.
+
+이후 실전 관측과 개인 설정 제안은 [경기 관측 기록](cs2-live-session-20260927.md)에 있다.
+사용자가 메뉴 감도 2.56과 정상 조작감을 확인하여 시작 cfg의 기존 감도 1.0 강제를
+제거했다. 감도는 게임 메뉴에 저장된 값을 유지한다. 제안한 그래픽/레이더/음향 변경은
+아직 적용하지 않았으며 현재 FPS 상한도 240을 유지한다.
