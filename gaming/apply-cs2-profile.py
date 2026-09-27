@@ -52,8 +52,12 @@ game_cfg = STEAM / 'steamapps/common/Counter-Strike Global Offensive/game/csgo/c
 save(game_cfg, (ROOT / 'workstation.cfg').read_text())
 # Partial video configuration: preserve unrelated values and hardware identifiers.
 video = local.parent.parent / '730/local/cfg/cs2_video.txt'
-settings = vdf.loads(video.read_text()) if video.exists() else {'video.cfg': {}}
-settings['video.cfg'].update(json.loads((ROOT / 'video-baseline.json').read_text()))
-save(video, vdf.dumps(settings, pretty=True))
-print('Installed launch wrapper, GameMode hooks, telemetry/input baseline and FHD video settings.')
+settings = vdf.loads(video.read_text()) if video.exists() else {}
+if 'Version' in settings.get('video.cfg', {}):
+    settings['video.cfg'].update(json.loads((ROOT / 'video-baseline.json').read_text()))
+    save(video, vdf.dumps(settings, pretty=True))
+    print('Updated initialized video settings. Verify again after game launch.')
+else:
+    print('Video settings deferred: launch CS2 once, close CS2 and Steam, then rerun.')
+print('Installed launch wrapper, GameMode hooks and telemetry/input baseline.')
 print(f'Private rollback backup: {BACKUP}')
