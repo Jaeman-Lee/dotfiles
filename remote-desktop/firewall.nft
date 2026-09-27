@@ -1,0 +1,9 @@
+# Only this dedicated RDP port is restricted; other host traffic is untouched.
+table inet ubuntu_web_desktop {
+    chain input {
+        type filter hook input priority -10; policy accept;
+        tcp dport 13389 iifname "lo" accept
+        tcp dport 13389 iifname "br-udesk" accept
+        tcp dport 13389 drop
+    }
+}

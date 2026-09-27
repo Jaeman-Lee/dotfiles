@@ -1,0 +1,61 @@
+name: Git hygiene
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+  workflow_call:
+permissions:
+  contents: read
+concurrency:
+  group: git-hygiene-${{ github.repository }}-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+jobs:
+  scan:
+    name: git-hygiene
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install verified Gitleaks 8.30.1
+        shell: bash
+        run: |
+          set -euo pipefail
+          archive="$RUNNER_TEMP/gitleaks.tar.gz"
+          curl --fail --silent --show-error --location --retry 3 \
+            https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz -o "$archive"
+          printf '551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb  %s\n' "$archive" | sha256sum --check
+          mkdir -p "$RUNNER_TEMP/git-hygiene-bin"
+          tar -xzf "$archive" -C "$RUNNER_TEMP/git-hygiene-bin" gitleaks
+      - name: Check proposed commits without logging secret values
+        env:
+          EVENT: ${{ github.event_name }}
+          PR_BASE: ${{ github.event.pull_request.base.sha }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+          BEFORE: ${{ github.event.before }}
+          CURRENT: ${{ github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          head="$CURRENT"
+          base="$BEFORE"
+          if [ "$EVENT" = pull_request ]; then
+            base="$PR_BASE"
+            head="$PR_HEAD"
+          fi
+          if [ "$EVENT" = workflow_dispatch ]; then
+            range="--all"
+          elif [[ "$base" =~ ^[0-9a-f]{40}$ ]] && [[ ! "$base" =~ ^0+$ ]]; then
+            range="$base..$head"
+            if ! git diff --check "$base" "$head" > "$RUNNER_TEMP/git-whitespace.txt"; then
+              echo 'Whitespace errors detected; run git diff --check locally.'
+              exit 1
+            fi
+          else
+            range="$head"
+          fi
+          "$RUNNER_TEMP/git-hygiene-bin/gitleaks" git . --redact=100 --no-banner --log-level warn --log-opts="$range"
+          echo 'Proposed commit scan passed. A PR scan does not certify older history.'

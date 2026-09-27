@@ -1,0 +1,13 @@
+[Unit]
+Description=Restrict Ubuntu web desktop RDP to loopback and its Docker bridge
+After=local-fs.target
+Before=network-pre.target display-manager.service
+Wants=network-pre.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/libexec/ubuntu-web-desktop-firewall
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

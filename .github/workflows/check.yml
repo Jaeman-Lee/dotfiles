@@ -1,0 +1,31 @@
+name: Project checks
+on:
+  pull_request:
+  push:
+    branches: [master, main]
+permissions:
+  contents: read
+jobs:
+  check:
+    name: project-checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Parse shell and Python without executing setup or disk operations
+        run: |
+          python3 - <<'PY'
+          import ast, pathlib, subprocess
+          for filename in subprocess.check_output(['git', 'ls-files'], text=True).splitlines():
+              path = pathlib.Path(filename)
+              if path.suffix == '.py':
+                  ast.parse(path.read_text(), filename=filename)
+              if path.suffix == '.sh' or filename == 'git/pre-push':
+                  subprocess.run(['sh', '-n', filename], check=True)
+          PY
+      - name: Validate Git profile
+        run: git config --file git/workflow.inc --list
+      - name: Verify push guards and installation preservation
+        run: python3 -m unittest discover -s tests -v

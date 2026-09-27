@@ -1,0 +1,13 @@
+[Unit]
+Description=Temporary resource budget for Kubernetes during gaming
+After=k3s.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+RuntimeDirectory=cs2-resources
+RuntimeDirectoryMode=0700
+ExecStart=/usr/local/libexec/cs2-resources start
+ExecStopPost=/usr/local/libexec/cs2-resources stop
+TimeoutStartSec=15
+TimeoutStopSec=15
