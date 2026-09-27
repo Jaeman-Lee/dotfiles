@@ -32,3 +32,10 @@ tags: [git, operations, verification]
 Git에서 제외된 생성 파일은 HDD의 `~/.local/state/worktree-consolidation-20260927/preserved-artifacts/`에 복사하고 SHA256을 확인했다.
 재생성 가능한 node_modules를 제외한 파일과 기존 사용자 변경을 보존했다. 개인 원문·환경 값·스크린샷·실행 로그는 Git에 넣지 않았다.
 
+
+## 검토 링크
+
+- Draft PR: https://github.com/Jaeman-Lee/dotfiles/pull/19
+- 기록 커밋: https://github.com/Jaeman-Lee/dotfiles/commit/e7a0df9f77b3fbe8bdb424b377d6730f1a278f76
+
+통합 후 다른 작업에서 추가한 remote-desktop 변경과 커밋은 보존했다. 이번 기록 커밋은 해당 변경을 다시 수정하거나 별도 커밋으로 복사하지 않는다.
