@@ -7,6 +7,8 @@ vault: 미설정
 # Ubuntu PC를 갤럭시·iPad 웹에서 원격 조작
 
 요구사항과 진행 상태: [GitHub issue #14](https://github.com/Jaeman-Lee/dotfiles/issues/14).
+변경 검토: [draft PR #17](https://github.com/Jaeman-Lee/dotfiles/pull/17).
+구현과 검증 기록: [커밋 22e3357](https://github.com/Jaeman-Lee/dotfiles/commit/22e3357).
 이 문서는 운영 절차의 원본이다. 지정된 Obsidian Vault는 확인되지 않아 저장소 `docs/`에 보관한다.
 실제 비밀번호·인증서 개인키·접속 세션·화면 캡처는 Git에 넣지 않는다.
 
