@@ -1,0 +1,8 @@
+{
+  "guacamoleVersion": "1.6.0",
+  "name": "Ubuntu mobile input",
+  "namespace": "ubuntu-mobile-input",
+  "js": ["mobile-input.js"],
+  "css": ["mobile-input.css"],
+  "html": ["toolbar.html", "input.html"]
+}
