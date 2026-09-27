@@ -163,6 +163,11 @@ HDD를 OS의 최초 고장 원인으로 확정하거나, 모든 종료 원인을
 장시간 온라인 플레이와 재부팅 후 상태는 미검증이다. 이슈 #11은 이 확인을 위해 유지한다.
 원본 JSONL과 게임 창 캡처는 비공개 로컬 진단 폴더에만 보관했다.
 
+사용자도 이번 테스트에서 “맵이 보이고 PC도 정상 반응함”을 확인했다.
+단기 맵 실행과 실제 화면 반응은 통과했으며 장시간 플레이 확인은 별도다.
+적용 변경: [de07b27](https://github.com/Jaeman-Lee/dotfiles/commit/de07b27).
+호스트 메모리 정책 검토: [serverize PR #10](https://github.com/Jaeman-Lee/serverize/pull/10).
+
 ### 터미널 우회 복구
 
 이번 설치 백업은 `~/.local/state/cs2-setup/backups/*-terminal/`에 있다.
