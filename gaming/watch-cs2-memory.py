@@ -77,6 +77,7 @@ def main():
         memory = pressure('memory')
         user = counters('/sys/fs/cgroup/user.slice/memory.stat')
         row = {'time': time.time(), 'available_mib': mem['MemAvailable']/1024,
+               'swap_used_mib': (mem['SwapTotal'] - mem['SwapFree'])/1024,
                'io': io, 'memory': memory,
                'user': {k: user.get(k, 0) for k in ('anon', 'file', 'shmem', 'workingset_refault_file', 'pgscan_direct')},
                'games': {}}

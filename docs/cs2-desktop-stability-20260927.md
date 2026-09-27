@@ -119,3 +119,55 @@ Python 구문 검사, 진단 도구의 PID 재사용/종료 경쟁 관련 안전
 실제 메모리 기준 종료, MSAA/CMAA2 값 유지 검증을 수행했다.
 해결되지 않은 작업은 메모리 여유 확보 방안과 터미널 우회책의 검증,
 그리고 맵 진입 후 실제 사용 안정성 확인이다. 이슈 #11은 열린 상태로 유지한다.
+
+## 19:57~20:02 메모리 대응과 재실행 검증
+
+사용자는 OS HDD 배치가 원인으로 확정됐는지 먼저 확인하도록 요청했고,
+미확정임을 설명한 뒤 실질적인 문제 해결을 지시했다. OS 이전을 보류하고
+SSD 스왑 8GiB를 추가했다. 호스트 정책의 원본·복구 절차는
+[serverize 운영 문서](https://github.com/Jaeman-Lee/serverize/blob/fix/desktop-host-swap-20260927/docs/runbooks/desktop-host-swap.md)에 둔다.
+K3s와 Pod는 스왑을 사용하지 않으며 재시작도 하지 않았다.
+
+터미널에는 [사용자용 설치 도구](../gaming/apply-terminal-workaround.py)로
+X11 실행 래퍼와 로컬 desktop override를 적용했다. 별도 application ID를 써서
+기존 Wayland 터미널 프로세스는 유지한다. 새로운 아이콘 실행은 X11로 열린다.
+DBusActivatable=false로 launcher가 래퍼를 거치도록 하고 창/탭/설정 action도 보존한다.
+실제 X11 창과 약 48초 실행 후 정상 종료를 확인했다. 테스트 말미가 게임 로딩과 겹쳤다.
+이 변경은 GTK의 Wayland 오류 경로를 우회하며 GTK 자체 수정은 아니다.
+
+### 3분 로컬 맵 측정
+
+이전과 같은 `+map de_dust2 +bot_quota 0`, MSAA=0/CMAA2=1로 요청했다.
+실제 화면에서는 Dust II 맵과 봇 경기가 확인되어 봇 없는 부하라고 주장하지 않는다.
+가용 메모리 2560MiB/I/O 대기 예방 종료 기준은 동일하게 유지했다.
+
+| 항목 | 스왑 추가 후 관측 |
+| --- | --- |
+| 게임 측정 | 약 180초, 마지막 표본 179.2초 |
+| 가용 메모리 최저 | 4244MiB, 약 4.14GiB |
+| SSD 스왑 사용 최대 | 1953MiB, 약 1.91GiB |
+| CS2 RSS 최대 | 5896MiB |
+| I/O full PSI avg10 최대 / 종료 직전 | 8.27% / 0.40% |
+| 메모리 full PSI avg10 최대 / 종료 직전 | 3.37% / 0.00% |
+| 종료 이유 | 예정된 180초 만료; 충돌이나 예방 기준 초과 아님 |
+
+Dust II 실제 화면에 HUD 평균 약 226FPS가 표시됐으나 단일 화면 값이므로
+벤치마크나 최저 FPS 보장으로 사용하지 않는다. 테스트 구간 사용자 journal에는
+새로운 terminal flush 오류, GNOME 응답 불가, Steam broken pipe/fatal assertion이 없었다.
+게임 종료 후 balanced 및 자원 서비스 inactive 복귀, MSAA/CMAA2 유지도 확인했다.
+K3s Ready, 시스템 Pod 재시작 0, Pod 부모 cgroup swap 사용 0을 확인했다.
+
+스왑 추가 후 이전 예방 종료 구간을 지나 맵 실행을 유지한 것은 실제 개선의 증거다.
+다만 실행 전 가용 메모리, 캐시와 다른 앱 상태가 달라 엄밀한 단일 변수 A/B 실험은 아니다.
+HDD를 OS의 최초 고장 원인으로 확정하거나, 모든 종료 원인을 해결했다고 주장하지 않는다.
+장시간 온라인 플레이와 재부팅 후 상태는 미검증이다. 이슈 #11은 이 확인을 위해 유지한다.
+원본 JSONL과 게임 창 캡처는 비공개 로컬 진단 폴더에만 보관했다.
+
+### 터미널 우회 복구
+
+이번 설치 백업은 `~/.local/state/cs2-setup/backups/*-terminal/`에 있다.
+기존 파일이 있었다면 백업의 동명 파일을 원래 위치에 복원한다. 새로 만든 파일은
+`new-files.txt`와 대조해 `~/.local/bin/ptyxis-x11` 및
+`~/.local/share/applications/org.gnome.Ptyxis.desktop`만 제거하고
+`update-desktop-database ~/.local/share/applications`를 실행하면 시스템 런처로 돌아간다.
+기존 창을 종료할 필요는 없다. `ptyxis` 명령 직접 실행은 이 아이콘용 우회를 거치지 않는다.
