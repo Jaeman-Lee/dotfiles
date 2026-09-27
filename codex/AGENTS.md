@@ -16,3 +16,11 @@
 - 기록 전 해당 프로젝트에 지정된 Vault와 문서 위치를 확인한다. 경로가 확인되지 않으면 해당 저장소의 docs/ 또는 기존 문서 위치에 Obsidian 호환 Markdown으로 기록하고, Vault 연결은 미설정으로 명시한다. 특정 Vault를 임의로 공통 Vault로 지정하지 않는다.
 
 이 파일은 Codex의 로컬 지속 지침이며 ChatGPT 계정 메모리와는 별개다.
+
+## 저장 위치 원칙 (2026-09-27 사용자 결정)
+
+- 실행에 필요한 서비스 데이터·모델·가상환경·게임·swap은 SSD를 사용할 수 있다.
+- Git 저장소·worktree·문서·Obsidian 노트·세션 기록·로그·생성 결과물·설치 보관물·재다운로드 가능한 패키지 캐시는 HDD에 둔다. 새 worktree는 `/home/hakunamatata/Projects/worktrees/`에 만든다.
+- `/mnt/dev-ssd/`라는 기존 경로가 HDD를 가리키는 호환 symlink일 수 있으므로 실제 파일시스템을 확인한다.
+- 현재 실행 중인 Steam·InvokeAI·다른 Codex 세션은 저장 위치 정리를 위해 임의 종료하지 않는다. 활성 파일은 사용 종료 후 체크섬 검증과 함께 이동한다.
+- 운영 원본: serverize 저장소 `docs/runbooks/storage-placement.md`. 개인 기록·로그·생성 원문은 Git에 넣지 않는다.
