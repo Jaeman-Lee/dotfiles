@@ -10,6 +10,12 @@ desktop_home=$(getent passwd "$SUDO_USER" | cut -d: -f6)
 [[ -f "$desktop_home/.local/share/ubuntu-web-desktop/credentials.json" ]] || {
     echo 'Run setup.py prepare as your desktop user first.' >&2; exit 1;
 }
+python3 - "$desktop_home/.local/share/ubuntu-web-desktop/credentials.json" <<'PY'
+import json, sys
+with open(sys.argv[1]) as stream:
+    if not json.load(stream).get("password_hash"):
+        sys.exit("Run python3 remote-desktop/set-login.py first to choose your familiar web login.")
+PY
 command -v nft >/dev/null
 # Refuse to take over an unrelated Tailscale Serve service on this port.
 tailscale serve status --json | python3 -c '

@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 """Prepare private state and web UI; activate RDP only after host protection."""
 import argparse
+import getpass
+import hashlib
 import json
 import os
 from pathlib import Path
 import secrets
 import shlex
 import subprocess
+import tempfile
 import xml.etree.ElementTree as ET
 
 HERE = Path(__file__).resolve().parent
@@ -24,8 +27,11 @@ def output(*args):
 
 
 def private_write(path, content):
-    path.write_text(content)
-    path.chmod(0o600)
+    with tempfile.NamedTemporaryFile(mode="w", dir=path.parent, delete=False) as stream:
+        stream.write(content)
+        temporary = Path(stream.name)
+    temporary.chmod(0o600)
+    temporary.replace(path)
 
 
 def compose(*args):
@@ -58,7 +64,7 @@ def prepare():
     credentials_path = STATE / "credentials.json"
     if not credentials_path.exists():
         private_write(credentials_path, json.dumps({
-            "username": "desktop", "password": secrets.token_urlsafe(18),
+            "username": getpass.getuser(), "password": secrets.token_urlsafe(18),
             "rdp_username": "desktop", "rdp_password": secrets.token_urlsafe(32),
         }, indent=2))
     credentials = json.loads(credentials_path.read_text())
@@ -72,8 +78,11 @@ def prepare():
     fingerprint = output("openssl", "x509", "-in", str(cert), "-noout",
                          "-fingerprint", "-sha256").split("=", 1)[1].lower()
     root = ET.Element("user-mapping")
+    password_hash = credentials.get("password_hash")
+    if not password_hash:
+        password_hash = hashlib.sha256(credentials["password"].encode()).hexdigest()
     auth = ET.SubElement(root, "authorize", username=credentials["username"],
-                         password=credentials["password"])
+                         password=password_hash, encoding="sha256")
     connection = ET.SubElement(auth, "connection", name="Ubuntu PC")
     ET.SubElement(connection, "protocol").text = "rdp"
     params = {"hostname": "host.docker.internal", "port": "13389",
@@ -87,9 +96,10 @@ def prepare():
     private_write(STATE / "compose.env", f"LOCAL_UID={os.getuid()}\nLOCAL_GID={os.getgid()}\nDESKTOP_STATE={STATE}\n")
     tail = json.loads(output("tailscale", "status", "--json"))
     dns = tail["Self"]["DNSName"].rstrip(".")
+    password_hint = credentials.get("password", "설정할 때 입력한 Ubuntu 로그인 비밀번호 (원문 저장 안 함)")
     private_write(STATE / "접속정보.txt", (
         f"Ubuntu 원격 화면\n\n주소: https://{dns}:8443/\n"
-        f"아이디: {credentials['username']}\n비밀번호: {credentials['password']}\n\n"
+        f"아이디: {credentials['username']}\n비밀번호: {password_hint}\n\n"
         "갤럭시/iPad에서 Tailscale 연결 후 접속하세요.\n"
         "이 파일은 비밀번호가 포함되어 있으므로 Git/이슈/채팅에 붙여넣지 마세요.\n"
     ))
