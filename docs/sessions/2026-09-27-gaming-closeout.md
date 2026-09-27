@@ -72,5 +72,7 @@ OS SSD 이전은 보류한다. 향후 실행하려면 별도 백업·복구·디
 새 작업 폴더: `/mnt/dev-ssd/worktrees/serverize-amd-gpu`.
 시작 문서: 새 폴더의 `SESSION.md`.
 작업 상태: [AMD GPU 검토 이슈 #12](https://github.com/Jaeman-Lee/serverize/issues/12).
-요청은 Linux 게임과 LLM 서빙을 함께 고려한 AMD GPU 업그레이드 추천이며,
-예산·목표 모델·전원/케이스 및 최신 공식 지원 정보를 다음 세션에서 확인한다.
+최신 요청은 **Qwen3.8-27B를 양자화·DSpark 등의 선택지도 고려해 품질 손실을 최소화하고,
+실사용 가능한 상태로 구동하는 최저비용 구성**이다. AMD GPU를 후보로 비교하되
+최저 총비용과 LLM 구동이 우선이다. 문맥·동시 요청·수용 속도·전원/케이스 및
+최신 공식 지원 정보를 새 세션에서 확인한다.
