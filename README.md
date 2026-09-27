@@ -2,6 +2,11 @@
 
 개인 개발 환경 설정 및 재사용 라이브러리 모음.
 
+## Ubuntu 웹 원격 화면
+
+[갤럭시·iPad에서 Tailscale로 Ubuntu 화면을 조작하는 설정과 사용법](docs/ubuntu-web-desktop.md).
+설치 코드는 [remote-desktop/](remote-desktop/)에 있으며, 비밀번호와 실행 상태는 저장소 밖에 보관한다.
+
 ## 빠른 시작
 
 ```bash

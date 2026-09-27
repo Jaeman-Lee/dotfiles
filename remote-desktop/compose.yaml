@@ -1,0 +1,35 @@
+name: ubuntu-web-desktop
+services:
+  guacd:
+    image: guacamole/guacd:1.6.0@sha256:8974eaa9ba32f713daf311e7cc8cd7e4cdfba1edea39eed75524e78ef4b08f4f
+    restart: unless-stopped
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    networks: [desktop]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    logging:
+      options: {max-size: 10m, max-file: "2"}
+  web:
+    image: guacamole/guacamole:1.6.0@sha256:f344085e618bb05e22b964b0208dbd06d3468275bac70206f93805245e067b40
+    user: "${LOCAL_UID:?}:${LOCAL_GID:?}"
+    restart: unless-stopped
+    depends_on: [guacd]
+    ports: ["127.0.0.1:18080:8080"]
+    environment:
+      GUACD_HOSTNAME: guacd
+      GUACAMOLE_HOME: /etc/guacamole
+      WEBAPP_CONTEXT: ROOT
+      REMOTE_IP_VALVE_ENABLED: "true"
+      JAVA_OPTS: -Xmx256m
+    volumes:
+      - "${DESKTOP_STATE:?}/guacamole:/etc/guacamole:ro"
+    networks: [desktop]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    logging:
+      options: {max-size: 10m, max-file: "2"}
+networks:
+  desktop:
+    driver_opts:
+      com.docker.network.bridge.name: br-udesk
