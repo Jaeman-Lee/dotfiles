@@ -76,7 +76,8 @@ xdg-open "$HOME/.local/share/ubuntu-web-desktop/접속정보.txt"
 3. PC 계정 이름과 설정 시 입력한 Ubuntu 로그인 비밀번호로 로그인한다.
 4. `Ubuntu PC` 연결을 선택한다. 연결이 하나면 바로 화면이 열릴 수도 있다.
 5. 화면 왼쪽 가장자리에서 오른쪽으로 밀면 Guacamole 메뉴가 열린다.
-6. 메뉴의 입력 설정에서 화면 키보드 또는 텍스트 입력을 선택한다. 작은 화면에서는 마우스 터치패드 모드가 편하다.
+6. 메뉴의 입력 설정에서 **Text input**을 선택해 Android 자체 키보드를 사용한다. 한글은 이 모드로 입력한다.
+7. 작은 화면에서는 마우스 터치패드 모드가 편하다.
 
 화면을 가로로 돌리고 확대/축소해서 사용한다. 짧은 Codex 지시와 작업 진행 확인에 적합하다.
 휴대폰의 한글 조합 입력이 잘 전달되지 않으면 메뉴의 클립보드 텍스트 칸에 붙여넣고 PC 쪽에 붙여넣는다.
@@ -87,8 +88,20 @@ xdg-open "$HOME/.local/share/ubuntu-web-desktop/접속정보.txt"
 1. Tailscale 앱에서 같은 Tailnet에 연결한다.
 2. Safari에서 동일한 HTTPS 주소를 열고 같은 웹 계정으로 로그인한다.
 3. `Ubuntu PC`를 선택한다. 가로 화면으로 사용하면 PC 화면을 넓게 볼 수 있다.
-4. 터치 입력과 화면 키보드를 사용할 수 있다. 연결된 Bluetooth 키보드·마우스가 있다면 함께 사용할 수 있다.
-5. 일부 단축키는 iPadOS/Safari가 먼저 처리한다. 필요한 키 조합은 Guacamole 화면 키보드로 전달한다.
+4. 왼쪽 가장자리에서 오른쪽으로 밀어 원격 메뉴를 열고 입력 방식을 **Text input**으로 선택한다.
+5. iPad의 화면 키보드에서는 **지구본(🌐)**으로 한국어/영어를 바꾼다. 한국어가 없다면
+   iPad 설정 → 일반 → 키보드 → 키보드에서 한국어를 추가한다.
+6. 외장 키보드에서는 Text input 상태로 iPad의 **Control + Space** 언어 전환을 사용한다.
+   한국어 키보드를 추가한 Apple 외장 키보드는 Caps Lock으로 영문/한국어를 바꾸는 방법도 지원한다.
+7. 입력할 때 Text input의 텍스트 입력 영역에 포커스를 둔다. Guacamole의 **On-screen keyboard**는
+   원격 PC의 Ctrl/Alt/방향키 등 특수키를 보내는 용도로 사용한다.
+8. 사용자 메뉴의 Settings에서 기본 입력 방식을 Text input으로 저장할 수 있다.
+   이 설정은 각 브라우저에 저장되므로 iPad와 갤럭시에서 각각 한 번 설정한다.
+
+한글 조합 중의 중간 이벤트는 Guacamole에서 전송하지 않고 조합이 확정된 뒤 반영하므로,
+PC에서 직접 타이핑할 때와 표시 시점이 다를 수 있다. 글자 누락·중복이나 긴 멈춤이 계속되면
+브라우저와 키보드 종류, 발생 앱, Text input 적용 여부를 구분해서 확인한다.
+PC의 전역 한/영 단축키는 임의로 변경하지 않는다.
 
 갤럭시와 iPad 모두 주소를 즐겨찾기에 저장하면 다음 접속이 간단하다.
 두 기기에서 동시에 연결하는 기능은 별도 검증하지 않았으므로 우선 한 기기씩 사용한다.
@@ -187,4 +200,6 @@ GNOME 원격 데스크톱의 5초 CPU 평균은 0.40%였다. CPU 100%는 논리 
 - [Guacamole 공식 Docker 설치](https://guacamole.apache.org/doc/gug/guacamole-docker.html)
 - [Guacamole 인증·RDP 연결 설정](https://guacamole.apache.org/doc/gug/configuring-guacamole.html)
 - [Guacamole 모바일 입력과 클립보드](https://guacamole.apache.org/doc/gug/using-guacamole.html)
+- [iPad 키보드 언어 전환](https://support.apple.com/guide/ipad/switch-between-keyboards-ipaddd28d7ed/ipados)
+- [Guacamole 1.6.0 한글 조합 이벤트 처리](https://github.com/apache/guacamole-client/blob/1.6.0/guacamole/src/main/frontend/src/app/textInput/directives/guacTextInput.js)
 - [Tailscale Serve](https://tailscale.com/docs/features/tailscale-serve)
