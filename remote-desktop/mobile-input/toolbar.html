@@ -3,26 +3,26 @@
   <div class="ubuntu-input-actions" role="group" aria-label="원격 입력">
     <button type="button" class="ubuntu-open-writing">글쓰기</button>
     <button type="button" class="ubuntu-open-keyboard">키보드</button>
-    <button type="button" ng-if="writing || menu.inputMethod === 'text'" ng-click="writing = false; menu.inputMethod = 'none'">접기</button>
+    <button type="button" ng-if="writing || menu.inputMethod === 'text'" ng-click="closeWriting()">접기</button>
     <button type="button" ng-click="sendEnter()" ng-disabled="sending" title="글쓰기의 문장을 PC에 붙여넣고 Enter">Enter</button>
     <guac-key keysym="65288" text="'⌫'"></guac-key>
     <button type="button" ng-click="menu.shown = !menu.shown">메뉴</button>
   </div>
-  <div class="ubuntu-writing" ng-show="writing">
+  <div class="ubuntu-writing" ng-style="{display: writing ? 'block' : 'none'}">
     <label class="ubuntu-input-destination">입력 대상
       <select ng-model="terminal" ng-disabled="sending" ng-change="draftEdited()" aria-label="입력 대상">
         <option ng-value="true">Codex · 터미널</option>
         <option ng-value="false">브라우저 · 일반 앱</option>
       </select>
     </label>
-    <label for="ubuntu-writing-text">PC에서 입력할 곳을 누른 뒤, 여기에 글을 쓰세요.</label>
-    <textarea id="ubuntu-writing-text" rows="2" aria-label="PC에 보낼 문장" ng-model="draft" ng-change="draftEdited()" autocapitalize="off" spellcheck="false"></textarea>
+    <label for="ubuntu-writing-text">여기에 글쓰기 · Ctrl+Enter로 전송 · Enter로 줄바꿈</label>
+    <textarea id="ubuntu-writing-text" rows="2" aria-label="PC에 보낼 문장" aria-keyshortcuts="Control+Enter" ng-model="draft" ng-change="draftEdited()" autocapitalize="off" spellcheck="false"></textarea>
     <div class="ubuntu-writing-actions">
       <button type="button" ng-click="pasteDraft(true)" ng-disabled="!draft || sending">전송 ↵</button>
       <button type="button" ng-click="pasteDraft(false)" ng-disabled="!draft || sending">붙여넣기만</button>
       <button type="button" ng-click="draft = ''; draftEdited()" ng-disabled="sending">지우기</button>
     </div>
-    <div class="ubuntu-input-notice" role="status">{{notice || '한/영은 기기 키보드에서 전환 · PC 클립보드를 사용합니다.'}}</div>
+    <div class="ubuntu-input-notice" role="status">{{notice || '글쓰기 중에는 PC 직접 타이핑이 잠깁니다. 직접 입력하려면 접기를 누르세요.'}}</div>
   </div>
   <label for="ubuntu-remote-text" ng-show="menu.inputMethod === 'text'">아래 입력칸을 눌러 입력 · 한/영은 기기 키보드에서 전환</label>
 </ubuntu-mobile-input>

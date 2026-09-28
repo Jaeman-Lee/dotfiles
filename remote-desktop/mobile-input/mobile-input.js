@@ -13,9 +13,26 @@ angular.module('client').directive('ubuntuMobileInput', ['$window', '$timeout', 
             if (scope.writing) scope.menu.inputMethod = 'none';
 
             var draft = element[0].querySelector('#ubuntu-writing-text');
+            var composing = false;
+            function compositionStarted() { composing = true; }
+            function compositionEnded() { composing = false; }
+            draft.addEventListener('compositionstart', compositionStarted);
+            draft.addEventListener('compositionend', compositionEnded);
+
             // The native keyboard/IME edits this local draft. Never forward its
             // physical key events to the remote client as well.
-            function localKey(event) { event.stopPropagation(); }
+            function localKey(event) {
+                event.stopPropagation();
+                if (event.type === 'keydown' && event.key === 'Enter' && event.ctrlKey &&
+                        !event.altKey && !event.metaKey && !event.shiftKey &&
+                        !composing && !event.isComposing && event.keyCode !== 229) {
+                    event.preventDefault();
+                    // An empty/repeated shortcut must never execute a bare PC Enter.
+                    if (!event.repeat && scope.draft) {
+                        scope.$apply(function () { scope.pasteDraft(true); });
+                    }
+                }
+            }
             ['keydown', 'keyup', 'keypress'].forEach(function (name) {
                 draft.addEventListener(name, localKey);
             });
@@ -24,9 +41,27 @@ angular.module('client').directive('ubuntuMobileInput', ['$window', '$timeout', 
             // local form editing out of the remote desktop.
             ['guacBeforeKeydown', 'guacBeforeKeyup'].forEach(function (name) {
                 scope.$on(name, function (event) {
-                    if ($window.document.activeElement === draft) event.preventDefault();
+                    // Focus can briefly land on Guacamole's hidden input sink,
+                    // especially after a touch or browser focus transition.
+                    // Fail closed for the entire writing mode, not just textarea focus.
+                    if (scope.writing || $window.document.activeElement === draft)
+                        event.preventDefault();
                 });
             });
+
+            function protectFocus(event) {
+                if (!scope.writing || scope.menu.shown || event.target === draft) return;
+                var target = event.target;
+                if (target.tagName !== 'TEXTAREA') return;
+                var rect = target.getBoundingClientRect();
+                if (target.id === 'ubuntu-remote-text' || (!rect.width && !rect.height)) {
+                    // Stop before InputSink's target focus listener schedules a
+                    // select()/refocus timer, or the two fields can fight forever.
+                    event.stopImmediatePropagation();
+                    draft.focus();
+                }
+            }
+            $window.document.addEventListener('focus', protectFocus, true);
 
             var writingButton = element[0].querySelector('.ubuntu-open-writing');
             function openWriting() {
@@ -38,6 +73,12 @@ angular.module('client').directive('ubuntuMobileInput', ['$window', '$timeout', 
                 draft.focus();
             }
             writingButton.addEventListener('click', openWriting);
+            scope.closeWriting = function () {
+                // The button lives inside ng-if's child scope. Change the
+                // directive scope here instead of shadowing `writing` there.
+                scope.writing = false;
+                scope.menu.inputMethod = 'none';
+            };
 
             var pendingPaste, pendingEnter;
             var lastPaste = null;
@@ -55,6 +96,9 @@ angular.module('client').directive('ubuntuMobileInput', ['$window', '$timeout', 
                     return;
                 }
                 scope.sending = true;
+                // Keep typing locally after clicking Send/Paste, including on iPad
+                // where opening the keyboard needs the original user gesture.
+                if (scope.writing) draft.focus();
                 var client = managed.client;
                 var terminal = scope.terminal;
                 var text = scope.draft;
@@ -153,6 +197,9 @@ angular.module('client').directive('ubuntuMobileInput', ['$window', '$timeout', 
             scope.$on('$destroy', function () {
                 button.removeEventListener('click', openKeyboard);
                 writingButton.removeEventListener('click', openWriting);
+                $window.document.removeEventListener('focus', protectFocus, true);
+                draft.removeEventListener('compositionstart', compositionStarted);
+                draft.removeEventListener('compositionend', compositionEnded);
                 ['keydown', 'keyup', 'keypress'].forEach(function (name) {
                     draft.removeEventListener(name, localKey);
                 });
