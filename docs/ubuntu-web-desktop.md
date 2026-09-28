@@ -109,6 +109,8 @@ PC의 전역 한/영 단축키는 임의로 변경하지 않는다.
 ### 글쓰기 포커스 보호와 Ctrl+Enter — 2026-09-28
 
 요구사항·진행 상태: [이슈 #22](https://github.com/Jaeman-Lee/dotfiles/issues/22).
+변경 검토: [draft PR #23](https://github.com/Jaeman-Lee/dotfiles/pull/23),
+구현·검증: [커밋 756a53e](https://github.com/Jaeman-Lee/dotfiles/commit/756a53e).
 **소스 수정·검증 완료, 운영 적용 대기.** 현재 원격 접속을 끊는 웹 컨테이너 재시작은 아직 수행하지 않았다.
 아래 동작은 변경본을 적용하고 기기 페이지를 새로고침한 뒤 사용할 수 있다.
 
