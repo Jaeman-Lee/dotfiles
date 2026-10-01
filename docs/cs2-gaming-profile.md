@@ -6,6 +6,9 @@ tags: [gaming, cs2, linux, performance]
 
 # CS2 개인 게임 프로필과 서버 자원 공존
 
+> 2026-10-02: 마우스 시점 이동 축 누락을 복구하고 실제 적용·사용자 해결 확인을 완료했다.
+> [원인 및 검증 기록](cs2-mouse-axes-20261002.md).
+
 Vault 연결 미설정. 이 Markdown이 문서 원본이다.
 실제 할 일은 [이슈 #13](https://github.com/Jaeman-Lee/dotfiles/issues/13),
 설치 작업은 [이슈 #11](https://github.com/Jaeman-Lee/dotfiles/issues/11),
