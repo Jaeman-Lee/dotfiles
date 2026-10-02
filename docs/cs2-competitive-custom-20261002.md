@@ -8,6 +8,8 @@ tags: [gaming, cs2, settings]
 
 Vault 연결 미설정. 이 문서가 운영 원본이다.
 요구사항·진행 상태: [Issue #28](https://github.com/Jaeman-Lee/dotfiles/issues/28).
+변경 검토: [draft PR #29](https://github.com/Jaeman-Lee/dotfiles/pull/29).
+구현: [71b3192](https://github.com/Jaeman-Lee/dotfiles/commit/71b3192).
 설정 원본: [workstation.cfg](../gaming/workstation.cfg).
 
 사용자가 플레이 중 커스텀을 요청하고 “무난한 경쟁전 설정”을 선택했다.
@@ -68,6 +70,11 @@ Vault 연결 미설정. 이 문서가 운영 원본이다.
 - 기존 모든 `bind` 줄 일치, 감도 강제 명령 없음 확인.
 - 저장소 원본과 사용자 설정·게임 cfg 두 설치본의 바이트 일치 확인.
 - `git diff --check`, 저장소 Git workflow 테스트 3개 통과.
+- 선언된 인터프리터 기준 Python/셸 구문 검사 통과. 기존 CI의 일괄 `sh -n`은
+  이번 변경 이전부터 Bash 배열을 사용하는 `gaming/install-steam-system.sh`에서
+  실패한다. 최초 커밋의 “syntax checks passed”는 이 인터프리터 구분 검사 결과로
+  한정하며, 기존 CI 전체가 통과했다는 의미가 아니다. CI 수정은 이 작업 범위에
+  포함하지 않았으며 PR에 기존 실패 원인을 명시했다.
 - 실제 경기 화면, 콘솔 실행 및 런타임 값은 아직 확인하지 않았다.
   설치 완료와 플레이 중 적용 완료를 구분한다.
 
