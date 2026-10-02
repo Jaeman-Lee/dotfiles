@@ -6,6 +6,9 @@ tags: [gaming, cs2, settings]
 
 # CS2 무난한 경쟁전 커스텀
 
+> 이후 사용자가 donk 설정을 선택했다. 현재 설정은
+> [donk 프로필 기록](cs2-donk-profile-20261002.md)을 참조한다. 아래는 이전 선택의 이력이다.
+
 Vault 연결 미설정. 이 문서가 운영 원본이다.
 요구사항·진행 상태: [Issue #28](https://github.com/Jaeman-Lee/dotfiles/issues/28).
 변경 검토: [draft PR #29](https://github.com/Jaeman-Lee/dotfiles/pull/29).
